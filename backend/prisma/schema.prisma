@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum DocumentSourceType {
+  PDF
+  IMAGE
+  CSV
+  SUMMARY
+  OTHER
+}
+
+enum DocumentStatus {
+  UPLOADED
+  PARSED
+  FAILED
+}
+
+enum DisputeStatus {
+  DRAFT
+  READY_FOR_REVIEW
+  SENT
+  RESPONDED
+  CLOSED
+}
+
+enum LetterType {
+  BUREAU_DISPUTE
+  CREDITOR_DISPUTE
+  DEBT_VALIDATION
+  GOODWILL
+  CFPB_COMPLAINT_DRAFT
+  METHOD_OF_VERIFICATION
+  CEASE_COMMUNICATION
+  SETTLEMENT_NEGOTIATION
+  INQUIRY_REMOVAL
+}
+
+model User {
+  id               String             @id @default(cuid())
+  email            String             @unique
+  passwordHash     String
+  name             String
+  role             UserRole           @default(USER)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  creditProfiles   CreditProfile[]
+  forensicAnalyses ForensicAnalysis[]
+  businessProfiles BusinessProfile[]
+  disputeCases     DisputeCase[]
+  disputeLetters   DisputeLetter[]
+  simulationRuns   SimulationRun[]
+  uploadedDocs     UploadedDocument[]
+  auditLogs        AuditLog[]
+}
+
+model CreditProfile {
+  id            String             @id @default(cuid())
+  userId        String
+  profileName   String?
+  bureauScore   Int
+  utilization   Float
+  latePayments  Int
+  collections   Int
+  inquiries     Int
+  oldestAccount Float
+  annualIncome  Float
+  debtToIncome  Float?
+  reportData    Json
+  createdAt     DateTime           @default(now())
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analyses      ForensicAnalysis[]
+}
+
+model ForensicAnalysis {
+  id                         String        @id @default(cuid())
+  userId                     String
+  creditProfileId            String?
+  suppressionFactors         Json
+  scoreSuppressionBreakdown  Json
+  lenderPerceptionNarrative  String
+  approvalRiskScore          Float
+  utilizationOptimizationMap Json
+  highestImpactActions       Json
+  createdAt                  DateTime      @default(now())
+  user                       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creditProfile              CreditProfile? @relation(fields: [creditProfileId], references: [id], onDelete: SetNull)
+}
+
+model UploadedDocument {
+  id              String             @id @default(cuid())
+  userId          String
+  sourceType      DocumentSourceType
+  status          DocumentStatus     @default(UPLOADED)
+  originalName    String
+  mimeType        String
+  sizeBytes       Int
+  storagePath     String
+  encryptedMeta   String
+  ocrText         String?
+  structuredData  Json?
+  parseSummary    String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DisputeCase {
+  id               String        @id @default(cuid())
+  userId           String
+  bureau           String
+  creditor         String
+  accountType      String
+  issueType        String
+  issueNarrative   String
+  userGoal         String
+  evidenceChecklist Json
+  status           DisputeStatus @default(DRAFT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  letters          DisputeLetter[]
+}
+
+model DisputeLetter {
+  id                String      @id @default(cuid())
+  userId            String
+  disputeCaseId     String?
+  letterType        LetterType
+  bureau            String?
+  creditor          String?
+  accountReference  String?
+  subject           String
+  body              String
+  supportingSummary String
+  requiresReview    Boolean     @default(true)
+  generatedByModel  String?
+  createdAt         DateTime    @default(now())
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  disputeCase       DisputeCase? @relation(fields: [disputeCaseId], references: [id], onDelete: SetNull)
+}
+
+model BusinessProfile {
+  id                 String   @id @default(cuid())
+  userId             String
+  legalName          String
+  entityType         String
+  businessAgeMonths  Int
+  monthlyRevenue     Float
+  hasEin             Boolean
+  hasDuns            Boolean
+  hasBusinessBanking Boolean
+  vendorTradelines   Int
+  readinessScore     Float
+  riskAnalysis       Json
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SimulationRun {
+  id                      String   @id @default(cuid())
+  userId                  String
+  scenarioName            String
+  baselineScore           Int
+  utilizationChange       Float?
+  debtPayoffAmount        Float?
+  newAccounts             Int?
+  inquiryChange           Int?
+  limitIncreaseAmount     Float?
+  estimatedScoreDelta     Int
+  approvalOddsDelta       Float
+  lenderPerceptionSummary String
+  createdAt               DateTime @default(now())
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  actorEmail String?
+  action     String
+  category   String
+  details    Json
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
