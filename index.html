@@ -2,1286 +2,1217 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stormproof Roofing Solutions LLC</title>
-    <meta name="description"
-        content="Stormproof Roofing Solutions LLC - Roofing, storm restoration, siding, fascia, soffit, gutters, and exterior services." />
-    <style>
-        :root {
-            --bg: #04101d;
-            --bg-2: #071a30;
-            --bg-3: #0d2747;
-            --card: rgba(10, 23, 42, 0.72);
-            --card-2: rgba(255, 255, 255, 0.04);
-            --line: rgba(255, 255, 255, 0.1);
-            --text: #eef5ff;
-            --muted: #9eb3cf;
-            --accent: #8cc9ff;
-            --accent-strong: #dfeeff;
-            --shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
-            --glow: 0 0 40px rgba(108, 182, 255, 0.18);
-            --radius: 28px;
-            --max: 1220px;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--text);
-            background:
-                radial-gradient(circle at 20% 0%, rgba(78, 154, 255, 0.16), transparent 24%),
-                radial-gradient(circle at 85% 10%, rgba(140, 201, 255, 0.08), transparent 18%),
-                linear-gradient(180deg, #030c17 0%, #051425 45%, #04101d 100%);
-            overflow-x: hidden;
-            padding-bottom: 110px;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.8;
-            background:
-                radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.06), transparent 8%),
-                radial-gradient(circle at 50% 70%, rgba(140, 201, 255, 0.06), transparent 14%),
-                radial-gradient(circle at 78% 20%, rgba(255, 255, 255, 0.04), transparent 10%);
-            mix-blend-mode: screen;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        img {
-            display: block;
-            max-width: 100%;
-        }
-
-        .container {
-            width: min(calc(100% - 32px), var(--max));
-            margin: 0 auto;
-        }
-
-        .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(16px);
-            background: rgba(3, 11, 21, 0.68);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .nav {
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            min-width: 0;
-        }
-
-        .brand-badge {
-            width: 56px;
-            height: 56px;
-            border-radius: 18px;
-            display: grid;
-            place-items: center;
-            font-weight: 900;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(140, 201, 255, 0.08));
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: var(--glow);
-        }
-
-        .brand-text strong {
-            display: block;
-            font-size: 1rem;
-            letter-spacing: 0.02em;
-        }
-
-        .brand-text span {
-            display: block;
-            color: var(--muted);
-            font-size: 0.84rem;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: var(--muted);
-            transition: 0.22s ease;
-            font-size: 0.96rem;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: white;
-        }
-
-        .btn {
-            border: 0;
-            cursor: pointer;
-            border-radius: 999px;
-            padding: 14px 22px;
-            font: inherit;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            color: #04101d;
-            background: linear-gradient(135deg, #f0f7ff, #9fd4ff);
-            box-shadow: 0 16px 40px rgba(125, 197, 255, 0.28);
-        }
-
-        .btn-secondary {
-            color: white;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .section-card,
-        .hero-copy,
-        .glass,
-        .service-card,
-        .mini-card,
-        .contact-card,
-        .estimate-card,
-        .process-card,
-        .review-card,
-        .gallery-card,
-        .area-card,
-        .insurance-card,
-        .stat,
-        .feature,
-        .cta-panel {
-            background: var(--card);
-            border: 1px solid var(--line);
-            backdrop-filter: blur(14px);
-            box-shadow: var(--shadow);
-        }
-
-        .hero {
-            padding: 72px 0 30px;
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.08fr 0.92fr;
-            gap: 28px;
-            align-items: center;
-        }
-
-        .hero-copy {
-            padding: 34px;
-            border-radius: 32px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-copy::after {
-            content: "";
-            position: absolute;
-            right: -30px;
-            bottom: -30px;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(140, 201, 255, 0.22), transparent 70%);
-            pointer-events: none;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 14px;
-            border-radius: 999px;
-            font-size: 0.88rem;
-            margin-bottom: 18px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        h1 {
-            margin: 0 0 18px;
-            font-size: clamp(2.7rem, 5vw, 5.2rem);
-            line-height: 0.96;
-            letter-spacing: -0.05em;
-            max-width: 10ch;
-        }
-
-        .lead {
-            margin: 0 0 24px;
-            color: var(--muted);
-            line-height: 1.72;
-            font-size: 1.05rem;
-            max-width: 62ch;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 24px;
-        }
-
-        .hero-meta {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
-        .stat {
-            padding: 18px;
-            border-radius: 22px;
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 1.5rem;
-            margin-bottom: 6px;
-        }
-
-        .stat span {
-            color: var(--muted);
-            font-size: 0.94rem;
-            line-height: 1.5;
-        }
-
-        .hero-side {
-            display: grid;
-            gap: 18px;
-        }
-
-        .glass {
-            border-radius: 32px;
-            padding: 20px;
-        }
-
-        .logo-shell {
-            aspect-ratio: 1 / 1;
-            border-radius: 26px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)), linear-gradient(135deg, #08192d, #0d2747 55%, #071626);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 14px;
-            display: grid;
-            place-items: center;
-            box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.03), var(--glow);
-        }
-
-        .logo-shell img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.34));
-        }
-
-        .feature-grid,
-        .mini-grid,
-        .process-grid,
-        .review-grid,
-        .gallery-grid,
-        .areas-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        .feature-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .mini-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .process-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        .review-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .gallery-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .areas-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        .feature,
-        .mini-card,
-        .process-card,
-        .review-card,
-        .gallery-card,
-        .area-card,
-        .insurance-card,
-        .service-card,
-        .contact-card,
-        .estimate-card,
-        .cta-panel {
-            border-radius: 24px;
-            padding: 22px;
-        }
-
-        h2 {
-            margin: 0;
-            font-size: clamp(1.9rem, 3vw, 3rem);
-            letter-spacing: -0.03em;
-        }
-
-        h3 {
-            margin: 0 0 10px;
-            letter-spacing: -0.02em;
-        }
-
-        p {
-            line-height: 1.66;
-        }
-
-        .muted,
-        .feature p,
-        .mini-card p,
-        .process-card p,
-        .review-card p,
-        .service-card p,
-        .insurance-card p,
-        .area-card p,
-        .contact-card p,
-        .estimate-card p,
-        .section-copy {
-            color: var(--muted);
-            margin: 0;
-        }
-
-        section {
-            padding: 22px 0 70px;
-        }
-
-        .section-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            gap: 20px;
-            margin-bottom: 22px;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .service-card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background: linear-gradient(180deg, transparent, rgba(140, 201, 255, 0.05));
-        }
-
-        .service-icon,
-        .mini-icon,
-        .process-number {
-            width: 54px;
-            height: 54px;
-            border-radius: 18px;
-            display: grid;
-            place-items: center;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: var(--glow);
-            margin-bottom: 14px;
-            font-weight: 900;
-            font-size: 1.18rem;
-        }
-
-        .checklist {
-            list-style: none;
-            padding: 0;
-            margin: 16px 0 0;
-            display: grid;
-            gap: 8px;
-        }
-
-        .checklist li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #dcebfd;
-            font-size: 0.95rem;
-        }
-
-        .checklist li::before {
-            content: "✓";
-            color: var(--accent);
-            font-weight: 900;
-        }
-
-        .split {
-            display: grid;
-            grid-template-columns: 1.05fr 0.95fr;
-            gap: 18px;
-        }
-
-        .contact-wrap {
-            display: grid;
-            grid-template-columns: 0.9fr 1.1fr;
-            gap: 18px;
-        }
-
-        .contact-stack,
-        .info-list {
-            display: grid;
-            gap: 14px;
-            margin-top: 18px;
-        }
-
-        .contact-item,
-        .info-item,
-        .service-area-chip {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .contact-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            display: grid;
-            place-items: center;
-            flex-shrink: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(140, 201, 255, 0.14));
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .contact-item strong,
-        .info-item strong {
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .contact-item span,
-        .info-item span {
-            color: var(--muted);
-        }
-
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        form {
-            display: grid;
-            gap: 14px;
-            margin-top: 18px;
-        }
-
-        .field {
-            display: grid;
-            gap: 8px;
-        }
-
-        label {
-            font-size: 0.92rem;
-            color: #dbe8f8;
-            font-weight: 700;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            padding: 14px 16px;
-            font: inherit;
-            outline: none;
-            transition: .2s ease;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: rgba(140, 201, 255, 0.72);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 0 4px rgba(140, 201, 255, 0.12);
-        }
-
-        textarea {
-            min-height: 130px;
-            resize: vertical;
-        }
-
-        .quote-box {
-            display: none;
-            margin-top: 18px;
-            padding: 18px;
-            border-radius: 18px;
-            background: rgba(140, 201, 255, 0.09);
-            border: 1px solid rgba(140, 201, 255, 0.18);
-            color: #e7f5ff;
-            line-height: 1.7;
-        }
-
-        .quote-box.show {
-            display: block;
-        }
-
-        .gallery-image {
-            aspect-ratio: 4 / 3;
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(140, 201, 255, 0.08));
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            margin-bottom: 14px;
-            color: #ddecff;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-        }
-
-        .stars {
-            font-size: 1rem;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            color: #dff0ff;
-        }
-
-        .cta-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        .footer {
-            padding: 20px 0 50px;
-            color: var(--muted);
-        }
-
-        .footer-card {
-            border-radius: 24px;
-            padding: 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .floating-bar {
-            position: fixed;
-            left: 50%;
-            bottom: 18px;
-            transform: translateX(-50%);
-            z-index: 999;
-            width: min(calc(100% - 24px), 760px);
-            padding: 10px;
-            border-radius: 22px;
-            display: flex;
-            gap: 10px;
-            background: rgba(3, 11, 21, 0.82);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(16px);
-            box-shadow: var(--shadow);
-        }
-
-        .floating-bar a {
-            flex: 1;
-            text-align: center;
-            border-radius: 16px;
-            padding: 14px 12px;
-            font-weight: 800;
-            font-size: 0.96rem;
-        }
-
-        .floating-call {
-            color: #04101d;
-            background: linear-gradient(135deg, #f0f7ff, #9fd4ff);
-        }
-
-        .floating-quote {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity .6s ease, transform .6s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 1100px) {
-
-            .hero-grid,
-            .services-grid,
-            .split,
-            .contact-wrap,
-            .process-grid,
-            .review-grid,
-            .gallery-grid,
-            .areas-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 820px) {
-            .nav {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 14px 0;
-                min-height: auto;
-            }
-
-            .hero-grid,
-            .services-grid,
-            .split,
-            .contact-wrap,
-            .feature-grid,
-            .mini-grid,
-            .process-grid,
-            .review-grid,
-            .gallery-grid,
-            .areas-grid,
-            .hero-meta,
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                max-width: none;
-                line-height: 1.02;
-            }
-
-            .hero {
-                padding-top: 36px;
-            }
-
-            .floating-bar {
-                bottom: 12px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CreditTitan AI | Credit & Business Credit Strategist</title>
+  <meta name="description"
+    content="CreditTitan AI turns your credit profile into a practical personal and business credit strategy with prioritized actions, projections, and product guidance." />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #0b1229;
+      --card: rgba(15, 23, 42, 0.78);
+      --line: rgba(148, 163, 184, 0.24);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #38bdf8;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --radius: 18px;
+      --shadow: 0 30px 60px rgba(2, 6, 23, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% -10%, rgba(34, 211, 238, 0.16), transparent 30%),
+        radial-gradient(circle at 85% 0%, rgba(59, 130, 246, 0.18), transparent 22%),
+        linear-gradient(180deg, #020617 0%, #0a1025 45%, #020617 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      background: rgba(2, 6, 23, 0.78);
+    }
+
+    .topbar .container {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #001018;
+      background: linear-gradient(135deg, #67e8f9, #38bdf8);
+      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.35);
+      font-weight: 900;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .top-links a {
+      color: inherit;
+      text-decoration: none;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .top-links a:hover {
+      color: var(--text);
+      background: rgba(148, 163, 184, 0.16);
+    }
+
+    main {
+      padding: 2.2rem 0 3.5rem;
+    }
+
+    .hero {
+      margin-bottom: 1.5rem;
+      display: grid;
+      gap: 1.2rem;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.3rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3.6vw, 3.1rem);
+      line-height: 1.06;
+      margin-bottom: 0.9rem;
+      max-width: 18ch;
+    }
+
+    h2 {
+      font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+      margin-bottom: 0.8rem;
+    }
+
+    h3 {
+      font-size: 1.02rem;
+      margin-bottom: 0.45rem;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.62;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.86);
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+      font-size: 0.84rem;
+      letter-spacing: 0.02em;
+      font-weight: 600;
+    }
+
+    .hero-list {
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .hero-list li {
+      font-size: 0.95rem;
+      color: #dbe7ff;
+      display: flex;
+      gap: 0.52rem;
+      align-items: flex-start;
+    }
+
+    .hero-list li::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+      margin-top: 0.85rem;
+    }
+
+    .metric {
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.85);
+      padding: 0.78rem;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.15rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .layout {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+
+    form {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .section-title {
+      margin-top: 0.3rem;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 0.32rem;
+    }
+
+    label {
+      font-size: 0.83rem;
+      color: #dbe7ff;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      font: inherit;
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 0.62rem 0.7rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(34, 211, 238, 0.7);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18);
+    }
+
+    .checkbox-row {
+      display: flex;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      margin-top: 0.2rem;
+    }
+
+    .chip-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.7rem;
+      font-size: 0.8rem;
+      color: #dbe7ff;
+      background: rgba(15, 23, 42, 0.72);
+    }
+
+    .chip-check input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 0.76rem 1rem;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: #001018;
+      background: linear-gradient(135deg, #67e8f9, #38bdf8);
+      box-shadow: 0 16px 36px rgba(56, 189, 248, 0.32);
+    }
+
+    .btn-secondary {
+      color: #dbe7ff;
+      background: rgba(15, 23, 42, 0.76);
+      border: 1px solid var(--line);
+    }
+
+    .result-wrap {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .projection-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+
+    .projection {
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.72rem;
+    }
+
+    .projection strong {
+      display: block;
+      font-size: 1.04rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .projection span {
+      font-size: 0.79rem;
+      color: var(--muted);
+    }
+
+    .level {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 0.38rem 0.64rem;
+      font-size: 0.78rem;
+      margin-top: 0.48rem;
+      color: #dbe7ff;
+      background: rgba(2, 6, 23, 0.5);
+      font-weight: 700;
+    }
+
+    .good {
+      color: var(--good);
+    }
+
+    .warn {
+      color: var(--warn);
+    }
+
+    .action-list,
+    .stack-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .action-item,
+    .stack-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.7rem;
+      background: rgba(15, 23, 42, 0.76);
+    }
+
+    .action-head,
+    .stack-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      align-items: baseline;
+      margin-bottom: 0.34rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.22rem 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      color: #cbd5e1;
+      background: rgba(2, 6, 23, 0.62);
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+    }
+
+    .recommend {
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.76);
+      padding: 0.7rem;
+    }
+
+    .recommend p {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 0.22rem;
+    }
+
+    .error-box,
+    .disclaimer {
+      border-radius: 12px;
+      padding: 0.72rem;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.76);
+      font-size: 0.86rem;
+      line-height: 1.58;
+    }
+
+    .error-box {
+      border-color: rgba(248, 113, 113, 0.45);
+      color: #fecaca;
+      background: rgba(127, 29, 29, 0.18);
+      display: none;
+    }
+
+    .disclaimer {
+      color: #cbd5e1;
+      margin-top: 0.7rem;
+    }
+
+    footer {
+      padding: 0.9rem 0 2.2rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .projection-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 690px) {
+      .topbar .container {
+        min-height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.7rem 0;
+      }
+
+      .top-links {
+        width: 100%;
+      }
+
+      .field-grid,
+      .recommend-grid,
+      .projection-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <header class="topbar" id="top">
-        <div class="container nav">
-            <a class="brand" href="#home" aria-label="Stormproof Roofing Solutions home">
-                <div class="brand-badge">SRS</div>
-                <div class="brand-text">
-                    <strong>Stormproof Roofing Solutions LLC</strong>
-                    <span>Modern roofing. Serious protection.</span>
-                </div>
-            </a>
-
-            <nav class="nav-links">
-                <a href="#services">Services</a>
-                <a href="#process">Process</a>
-                <a href="#reviews">Reviews</a>
-                <a href="#contact">Contact</a>
-                <a class="btn btn-primary" href="tel:7067187564">Call Donovan</a>
-            </nav>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <span class="brand-badge">CT</span>
+        <div>
+          <div>CreditTitan AI</div>
+          <div class="muted" style="font-size:0.78rem;">Credit + business credit strategist</div>
         </div>
-    </header>
-
-    <main id="home">
-        <section class="hero">
-            <div class="container hero-grid">
-                <div class="hero-copy reveal">
-                    <div class="eyebrow">⚡ Storm damage specialists • Roofing • Exterior upgrades</div>
-                    <h1>Protect your home with a team that looks premium and works fast.</h1>
-                    <p class="lead">
-                        Stormproof Roofing Solutions LLC gives homeowners a sharp, trustworthy experience for roofing,
-                        storm restoration, siding, fascia, soffit, gutters, and exterior work. This version is built to
-                        convert better, look stronger, and feel more like a real modern brand.
-                    </p>
-
-                    <div class="hero-actions">
-                        <a class="btn btn-primary" href="#contact">Get Free Estimate</a>
-                        <a class="btn btn-secondary" href="tel:4235995302">Call Thomas</a>
-                    </div>
-
-                    <div class="hero-meta">
-                        <div class="stat">
-                            <strong>Roofing</strong>
-                            <span>Repairs, full replacement, storm-related work</span>
-                        </div>
-                        <div class="stat">
-                            <strong>Exterior</strong>
-                            <span>Siding, fascia, soffit, gutters, cleanup</span>
-                        </div>
-                        <div class="stat">
-                            <strong>Fast Response</strong>
-                            <span>Easy contact for estimates and project follow-up</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hero-side reveal">
-                    <div class="glass">
-                        <div class="logo-shell">
-                          <img src="stormproof-logo.png" alt="Stormproof Roofing Solutions logo" />
-                        </div>
-                    </div>
-
-                    <div class="feature-grid">
-                        <div class="feature">
-                            <h3>Storm Ready</h3>
-                            <p>Clean branding that helps homeowners trust the company fast.</p>
-                        </div>
-                        <div class="feature">
-                            <h3>Premium Presence</h3>
-                            <p>A stronger website feel that looks much more established and modern.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="container mini-grid">
-                <div class="mini-card reveal">
-                    <div class="mini-icon">🏠</div>
-                    <h3>Residential Focus</h3>
-                    <p>Built to speak clearly to homeowners who want help, not confusion.</p>
-                </div>
-                <div class="mini-card reveal">
-                    <div class="mini-icon">⚒️</div>
-                    <h3>Professional Scope</h3>
-                    <p>Roofing, storm restoration, siding, fascia, soffit, gutters, and exterior work.</p>
-                </div>
-                <div class="mini-card reveal">
-                    <div class="mini-icon">📱</div>
-                    <h3>Lead Machine Setup</h3>
-                    <p>More call buttons, more trust points, better flow, and better conversion layout.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="services">
-            <div class="container">
-                <div class="section-head reveal">
-                    <div>
-                        <h2>Services homeowners can understand in seconds</h2>
-                        <p class="section-copy">Simple categories. Strong presentation. Better first impression.</p>
-                    </div>
-                </div>
-
-                <div class="services-grid">
-                    <article class="service-card reveal">
-                        <div class="service-icon">🏚️</div>
-                        <h3>Roof Repair & Replacement</h3>
-                        <p>Present roofing the right way so customers know you handle both repair work and full system
-                            replacement.</p>
-                        <ul class="checklist">
-                            <li>Leak and damage repair</li>
-                            <li>Shingle replacement</li>
-                            <li>Full roof replacement</li>
-                        </ul>
-                    </article>
-
-                    <article class="service-card reveal">
-                        <div class="service-icon">🌩️</div>
-                        <h3>Storm Damage Restoration</h3>
-                        <p>One of the strongest sections for trust-building. This tells people you know how to handle
-                            storm-related work.</p>
-                        <ul class="checklist">
-                            <li>Storm-related inspections</li>
-                            <li>Damage documentation support</li>
-                            <li>Fast project response</li>
-                        </ul>
-                    </article>
-
-                    <article class="service-card reveal">
-                        <div class="service-icon">🪟</div>
-                        <h3>Siding, Fascia & Soffit</h3>
-                        <p>Exterior work that rounds out the offer and makes the company look like more than just a
-                            roof-only business.</p>
-                        <ul class="checklist">
-                            <li>Vinyl siding upgrades</li>
-                            <li>Fascia replacement</li>
-                            <li>Soffit and trim work</li>
-                        </ul>
-                    </article>
-
-                    <article class="service-card reveal">
-                        <div class="service-icon">🌧️</div>
-                        <h3>Gutters & Drainage</h3>
-                        <p>Gutter work is a perfect add-on service and helps increase average job value.</p>
-                        <ul class="checklist">
-                            <li>Gutter replacement</li>
-                            <li>Drainage improvement</li>
-                            <li>Exterior water management</li>
-                        </ul>
-                    </article>
-
-                    <article class="service-card reveal">
-                        <div class="service-icon">🧹</div>
-                        <h3>Exterior Cleanup</h3>
-                        <p>A clean finish matters. This section helps make the brand feel complete and responsible.</p>
-                        <ul class="checklist">
-                            <li>Jobsite cleanup</li>
-                            <li>Exterior presentation</li>
-                            <li>Final walk-through mindset</li>
-                        </ul>
-                    </article>
-
-                    <article class="service-card reveal">
-                        <div class="service-icon">📋</div>
-                        <h3>Free Estimates</h3>
-                        <p>Keep it easy for customers. Fewer steps means more leads coming in.</p>
-                        <ul class="checklist">
-                            <li>Quick estimate form</li>
-                            <li>Direct call options</li>
-                            <li>Clear next steps</li>
-                        </ul>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="container split">
-                <div class="insurance-card reveal">
-                    <h2>Insurance claim help section</h2>
-                    <p class="section-copy">This makes the company feel more experienced and easier to work with for
-                        storm-related jobs.</p>
-                    <div class="info-list">
-                        <div class="info-item">
-                            <div class="contact-icon">1</div>
-                            <div>
-                                <strong>Inspection</strong>
-                                <span>We review visible roofing and exterior damage.</span>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <div class="contact-icon">2</div>
-                            <div>
-                                <strong>Documentation</strong>
-                                <span>We help organize the project clearly so the customer understands the scope.</span>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <div class="contact-icon">3</div>
-                            <div>
-                                <strong>Project Completion</strong>
-                                <span>We focus on a clean process from first contact to final finish.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="insurance-card reveal">
-                    <h2>Why this version is better</h2>
-                    <p class="section-copy">It is not just prettier. It is built to turn more visitors into actual
-                        calls.</p>
-                    <ul class="checklist">
-                        <li>More trust sections above the fold</li>
-                        <li>More visible contact actions</li>
-                        <li>Reviews section added</li>
-                        <li>Gallery section added</li>
-                        <li>Service area section added</li>
-                        <li>Better structure for future photos and testimonials</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="process">
-            <div class="container">
-                <div class="section-head reveal">
-                    <div>
-                        <h2>A simple 4-step process</h2>
-                        <p class="section-copy">This helps homeowners relax because they can see exactly how it works.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="process-grid">
-                    <div class="process-card reveal">
-                        <div class="process-number">1</div>
-                        <h3>Reach Out</h3>
-                        <p>Customer calls, emails, or fills out the estimate form.</p>
-                    </div>
-                    <div class="process-card reveal">
-                        <div class="process-number">2</div>
-                        <h3>Inspection</h3>
-                        <p>The property and project needs are reviewed clearly.</p>
-                    </div>
-                    <div class="process-card reveal">
-                        <div class="process-number">3</div>
-                        <h3>Quote</h3>
-                        <p>We discuss the service needed and next steps.</p>
-                    </div>
-                    <div class="process-card reveal">
-                        <div class="process-number">4</div>
-                        <h3>Build</h3>
-                        <p>The project gets completed with a clean professional finish.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="reviews">
-            <div class="container">
-                <div class="section-head reveal">
-                    <div>
-                        <h2>What homeowners are saying</h2>
-                        <p class="section-copy">
-                            We take pride in clear communication, reliable service, and quality workmanship from start
-                            to finish.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="review-grid">
-
-                    <div class="review-card reveal">
-                        <div class="stars">★★★★★</div>
-                        <h3>Easy to work with</h3>
-                        <p>
-                            Donovan and Thomas were easy to reach, answered our questions, and made the whole process
-                            feel a lot less stressful than we expected.
-                        </p>
-                        <p class="muted">— Jason K., Columbus, GA</p>
-                    </div>
-
-                    <div class="review-card reveal">
-                        <div class="stars">★★★★★</div>
-                        <h3>Professional from start to finish</h3>
-                        <p>
-                            They showed up professionally, communicated clearly, and the finished work made a big
-                            difference in how the house looked.
-                        </p>
-                        <p class="muted">— Manuel J., Columbus, GA</p>
-                    </div>
-
-                    <div class="review-card reveal">
-                        <div class="stars">★★★★★</div>
-                        <h3>Would gladly recommend</h3>
-                        <p>
-                            The job was handled with care, the property was left clean, and the overall experience felt
-                            honest, smooth, and professional.
-                        </p>
-                        <p class="muted">— Tyson M., Columbus, GA</p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="container">
-                <div class="section-head reveal">
-                    <div>
-                        <h2>Before & after gallery</h2>
-                        <p class="section-copy">
-                            Real project examples that show the quality of our work.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="gallery-grid">
-
-                    <!-- ROOF -->
-                    <div class="gallery-card reveal">
-                        <div class="gallery-image">
-                            <img src="roofing.jpg" alt="Roof transformation project">
-                        </div>
-                        <h3>Roof transformation</h3>
-                        <p class="muted">
-                            Full roof replacement with a clean, professional finish.
-                        </p>
-                    </div>
-
-                    <!-- SIDING -->
-                    <div class="gallery-card reveal">
-                        <div class="gallery-image">
-                            <img src="siding.jpg" alt="Siding upgrade project">
-                        </div>
-                        <h3>Siding upgrade</h3>
-                        <p class="muted">
-                            Vinyl siding replacement for a fresh, modern exterior.
-                        </p>
-                    </div>
-
-                    <!-- STORM -->
-                    <div class="gallery-card reveal">
-                        <div class="gallery-image">
-                            <img src="storm.png" alt="Storm damage restoration project">
-                        </div>
-                        <h3>Storm restoration</h3>
-                        <p class="muted">
-                            Storm damage repair bringing the home back to full strength.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="container">
-                <div class="section-head reveal">
-                    <div>
-                        <h2>Service areas</h2>
-                        <p class="section-copy">This makes the company feel more real and local. We can tighten these
-                            later.</p>
-                    </div>
-                </div>
-
-                <div class="areas-grid">
-                    <div class="area-card reveal">
-                        <h3>Columbus</h3>
-                        <p>Local residential exterior service support.</p>
-                    </div>
-                    <div class="area-card reveal">
-                        <h3>Phenix City</h3>
-                        <p>Fast response for roofing and exterior needs.</p>
-                    </div>
-                    <div class="area-card reveal">
-                        <h3>Fortson</h3>
-                        <p>Nearby project coverage and estimate requests.</p>
-                    </div>
-                    <div class="area-card reveal">
-                        <h3>Smiths Station</h3>
-                        <p>Expanded service area presence for more leads.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact">
-            <div class="container contact-wrap">
-                <div class="contact-card reveal">
-                    <h2>Contact Stormproof Roofing Solutions LLC</h2>
-                    <p class="section-copy">First-name style only, just like you wanted. Clean, simple, and easy to
-                        trust.</p>
-
-                    <div class="contact-stack">
-                        <a class="contact-item" href="tel:7067187564">
-                            <div class="contact-icon">📞</div>
-                            <div>
-                                <strong>Donovan</strong>
-                                <span>706-718-7564</span>
-                            </div>
-                        </a>
-                        <a class="contact-item" href="tel:4235995302">
-                            <div class="contact-icon">📞</div>
-                            <div>
-                                <strong>Thomas</strong>
-                                <span>423-599-5302</span>
-                            </div>
-                        </a>
-                        <a class="contact-item" href="mailto:Rsolutions1980@gmail.com">
-                            <div class="contact-icon">✉️</div>
-                            <div>
-                                <strong>Email</strong>
-                                <span>Rsolutions1980@gmail.com</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="estimate-card reveal">
-                    <h2>Quick estimate request</h2>
-                    <p class="section-copy">This form gives the page an app feel and gives the customer an instant
-                        response on screen.</p>
-
-                    <form id="estimateForm">
-                        <div class="two-col">
-                            <div class="field">
-                                <label for="name">Your Name</label>
-                                <input id="name" name="name" type="text" placeholder="Enter your name" required />
-                            </div>
-                            <div class="field">
-                                <label for="phone">Phone Number</label>
-                                <input id="phone" name="phone" type="tel" placeholder="Enter your phone number"
-                                    required />
-                            </div>
-                        </div>
-
-                        <div class="two-col">
-                            <div class="field">
-                                <label for="service">Service Needed</label>
-                                <select id="service" name="service" required>
-                                    <option value="">Choose a service</option>
-                                    <option>Roof Repair</option>
-                                    <option>Full Roof Replacement</option>
-                                    <option>Storm Damage Inspection</option>
-                                    <option>Siding / Fascia / Soffit</option>
-                                    <option>Gutters</option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="timeline">Timeline</label>
-                                <select id="timeline" name="timeline" required>
-                                    <option value="">Choose timing</option>
-                                    <option>ASAP</option>
-                                    <option>This Week</option>
-                                    <option>This Month</option>
-                                    <option>Just Researching</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label for="message">Project Details</label>
-                            <textarea id="message" name="message"
-                                placeholder="Tell us what is going on with the roof, siding, gutters, or storm damage..."></textarea>
-                        </div>
-
-                        <button class="btn btn-primary" type="submit">Send Estimate Request</button>
-                    </form>
-
-                    <div class="quote-box" id="quoteBox"></div>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="container">
-                <div class="cta-panel reveal">
-                    <div>
-                        <h2>Ready to make this feel even more real?</h2>
-                        <p class="section-copy">The next upgrade is replacing placeholder reviews and gallery blocks
-                            with your real jobs and real customer proof.</p>
-                    </div>
-                    <div class="hero-actions" style="margin-bottom:0;">
-                        <a class="btn btn-primary" href="tel:7067187564">Call Donovan</a>
-                        <a class="btn btn-secondary" href="tel:4235995302">Call Thomas</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-card reveal">
-                <div>
-                    <strong>Stormproof Roofing Solutions LLC</strong>
-                    <p class="section-copy">Premium presentation for roofing, storm restoration, siding, fascia, soffit,
-                        gutters, and exterior work.</p>
-                </div>
-                <div>
-                    Donovan • 706-718-7564 &nbsp; | &nbsp; Thomas • 423-599-5302
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <div class="floating-bar">
-        <a class="floating-call" href="tel:7067187564">📞 Call Now</a>
-        <a class="floating-quote" href="#contact">📝 Free Estimate</a>
+      </div>
+      <nav class="top-links">
+        <a href="#intake">AI Intake</a>
+        <a href="#output">Action Plan</a>
+        <a href="#output">Business Credit Map</a>
+      </nav>
     </div>
+  </header>
 
-    <script>
-        const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.14 });
-        reveals.forEach(el => observer.observe(el));
+  <main class="container">
+    <section class="hero">
+      <div class="panel">
+        <div class="eyebrow">Fast analysis • Smart leverage • Action-first</div>
+        <h1>Post your credit profile and get a powerful AI game plan in minutes.</h1>
+        <p class="muted">
+          This AI transforms your data into a practical execution stack: score projection windows, highest-impact credit
+          repair moves, product recommendations, and a step-by-step business credit acceleration roadmap.
+        </p>
+        <ul class="hero-list">
+          <li>Prioritizes moves that can influence scores fastest (utilization, derogatory cleanup, inquiry control).</li>
+          <li>Builds lender-ready personal + business credit habits focused on leverage and cashflow protection.</li>
+          <li>Gives "millionaire decision" prompts so every credit move supports wealth-building, not lifestyle drift.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>What this engine optimizes</h2>
+        <div class="hero-metrics">
+          <div class="metric">
+            <strong>Speed Wins</strong>
+            <span>Rapid improvement opportunities first</span>
+          </div>
+          <div class="metric">
+            <strong>Risk Control</strong>
+            <span>Limits moves that can hurt your score</span>
+          </div>
+          <div class="metric">
+            <strong>Credit Mix</strong>
+            <span>Personal + business profile balance</span>
+          </div>
+          <div class="metric">
+            <strong>Wealth Moves</strong>
+            <span>Decision framework for high-ROI leverage</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-        const sections = [...document.querySelectorAll('section[id]')];
+    <section class="layout">
+      <div class="panel" id="intake">
+        <h2>AI credit intake</h2>
+        <p class="muted" style="margin-bottom:0.7rem;">
+          Enter your current data to generate your personal strategy blueprint.
+        </p>
+        <form id="creditForm" novalidate>
+          <div class="section-title">Personal credit profile</div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" placeholder="Your name" required />
+            </div>
+            <div class="field">
+              <label for="creditScore">Current credit score (300-850)</label>
+              <input id="creditScore" name="creditScore" type="number" min="300" max="850" placeholder="e.g., 585"
+                required />
+            </div>
+            <div class="field">
+              <label for="utilization">Credit utilization %</label>
+              <input id="utilization" name="utilization" type="number" min="0" max="100" placeholder="e.g., 78"
+                required />
+            </div>
+            <div class="field">
+              <label for="latePayments">Late payments on report</label>
+              <input id="latePayments" name="latePayments" type="number" min="0" max="30" placeholder="e.g., 3"
+                required />
+            </div>
+            <div class="field">
+              <label for="collections">Collections / charge-offs</label>
+              <input id="collections" name="collections" type="number" min="0" max="20" placeholder="e.g., 1"
+                required />
+            </div>
+            <div class="field">
+              <label for="inquiries">Hard inquiries (last 6 months)</label>
+              <input id="inquiries" name="inquiries" type="number" min="0" max="20" placeholder="e.g., 4" required />
+            </div>
+            <div class="field">
+              <label for="oldestAccount">Oldest account age (years)</label>
+              <input id="oldestAccount" name="oldestAccount" type="number" min="0" max="60" placeholder="e.g., 2"
+                required />
+            </div>
+            <div class="field">
+              <label for="annualIncome">Annual income ($)</label>
+              <input id="annualIncome" name="annualIncome" type="number" min="0" step="1000" placeholder="e.g., 72000"
+                required />
+            </div>
+          </div>
 
-        window.addEventListener('scroll', () => {
-            const current = sections.find(section => {
-                const top = window.scrollY;
-                return top >= section.offsetTop - 130 && top < section.offsetTop + section.offsetHeight - 130;
-            });
-            navLinks.forEach(link => link.classList.remove('active'));
-            if (current) {
-                const active = document.querySelector(`.nav-links a[href="#${current.id}"]`);
-                if (active) active.classList.add('active');
-            }
+          <div class="field-grid">
+            <div class="field">
+              <label for="goal">Primary credit goal</label>
+              <select id="goal" name="goal" required>
+                <option value="">Select goal</option>
+                <option value="funding">Get funding and higher limits</option>
+                <option value="home">Qualify for home financing</option>
+                <option value="businessGrowth">Scale business with credit leverage</option>
+                <option value="cleanProfile">Clean report and stabilize score</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="riskTolerance">Risk tolerance for new credit</label>
+              <select id="riskTolerance" name="riskTolerance" required>
+                <option value="">Select tolerance</option>
+                <option value="low">Low (protect score first)</option>
+                <option value="medium">Medium (balanced growth)</option>
+                <option value="high">High (aggressive optimization)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-title">Business credit profile</div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="businessAge">Business age (months)</label>
+              <input id="businessAge" name="businessAge" type="number" min="0" max="600" placeholder="e.g., 8"
+                required />
+            </div>
+            <div class="field">
+              <label for="businessRevenue">Monthly business revenue ($)</label>
+              <input id="businessRevenue" name="businessRevenue" type="number" min="0" step="500"
+                placeholder="e.g., 9500" required />
+            </div>
+            <div class="field">
+              <label for="vendorTradelines">Active vendor tradelines</label>
+              <input id="vendorTradelines" name="vendorTradelines" type="number" min="0" max="30" placeholder="e.g., 2"
+                required />
+            </div>
+            <div class="field">
+              <label for="entityType">Entity type</label>
+              <select id="entityType" name="entityType" required>
+                <option value="">Select entity</option>
+                <option value="soleProp">Sole proprietorship</option>
+                <option value="llc">LLC</option>
+                <option value="sCorp">S-Corp</option>
+                <option value="cCorp">C-Corp</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="checkbox-row">
+            <label class="chip-check"><input type="checkbox" id="hasEin" name="hasEin" /> EIN ready</label>
+            <label class="chip-check"><input type="checkbox" id="hasDuns" name="hasDuns" /> D-U-N-S listed</label>
+            <label class="chip-check"><input type="checkbox" id="hasBank" name="hasBank" /> Business bank account</label>
+          </div>
+
+          <div class="field">
+            <label for="context">Additional context (optional)</label>
+            <textarea id="context" name="context"
+              placeholder="Any collections details, loan goals, purchase plans, or special constraints."></textarea>
+          </div>
+
+          <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+            <button type="submit" class="btn btn-primary">Run CreditTitan AI Analysis</button>
+            <button type="button" id="demoFill" class="btn btn-secondary">Load sample data</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel" id="output">
+        <h2>AI strategy output</h2>
+        <p class="muted" style="margin-bottom:0.7rem;">Your custom action plan appears here after analysis.</p>
+        <div id="errorBox" class="error-box"></div>
+        <div class="result-wrap" id="resultWrap">
+          <div class="projection-grid" id="projectionGrid">
+            <div class="projection">
+              <strong>--</strong>
+              <span>Current score</span>
+            </div>
+            <div class="projection">
+              <strong>--</strong>
+              <span>45-day potential</span>
+            </div>
+            <div class="projection">
+              <strong>--</strong>
+              <span>6-month potential</span>
+            </div>
+            <div class="projection">
+              <strong>--</strong>
+              <span>12-month potential</span>
+            </div>
+          </div>
+          <div id="riskLevel" class="level">Awaiting data...</div>
+
+          <div>
+            <h3>Priority repair actions</h3>
+            <ul id="actionList" class="action-list"></ul>
+          </div>
+
+          <div>
+            <h3>Intelligent credit options</h3>
+            <div id="recommendGrid" class="recommend-grid"></div>
+          </div>
+
+          <div>
+            <h3>Business credit fast-track roadmap</h3>
+            <ul id="businessRoadmap" class="stack-list"></ul>
+          </div>
+
+          <div>
+            <h3>Millionaire decision stack</h3>
+            <ul id="decisionStack" class="stack-list"></ul>
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          This tool is an educational strategy assistant, not legal or financial advice. Credit outcomes depend on
+          report accuracy, payment behavior, lender policies, and time. No tool can legally guarantee an overnight
+          score jump for every profile.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Built for fast execution: clean profile, stronger approvals, smarter leverage.
+  </footer>
+
+  <script>
+    const form = document.getElementById("creditForm");
+    const demoFillButton = document.getElementById("demoFill");
+    const projectionGrid = document.getElementById("projectionGrid");
+    const riskLevel = document.getElementById("riskLevel");
+    const actionList = document.getElementById("actionList");
+    const recommendGrid = document.getElementById("recommendGrid");
+    const businessRoadmap = document.getElementById("businessRoadmap");
+    const decisionStack = document.getElementById("decisionStack");
+    const errorBox = document.getElementById("errorBox");
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function readFormData() {
+      const data = new FormData(form);
+      return {
+        name: String(data.get("name") || "").trim(),
+        creditScore: Number(data.get("creditScore")),
+        utilization: Number(data.get("utilization")),
+        latePayments: Number(data.get("latePayments")),
+        collections: Number(data.get("collections")),
+        inquiries: Number(data.get("inquiries")),
+        oldestAccount: Number(data.get("oldestAccount")),
+        annualIncome: Number(data.get("annualIncome")),
+        goal: String(data.get("goal") || ""),
+        riskTolerance: String(data.get("riskTolerance") || ""),
+        businessAge: Number(data.get("businessAge")),
+        businessRevenue: Number(data.get("businessRevenue")),
+        vendorTradelines: Number(data.get("vendorTradelines")),
+        entityType: String(data.get("entityType") || ""),
+        hasEin: data.get("hasEin") === "on",
+        hasDuns: data.get("hasDuns") === "on",
+        hasBank: data.get("hasBank") === "on",
+        context: String(data.get("context") || "").trim()
+      };
+    }
+
+    function validate(profile) {
+      const issues = [];
+
+      if (!profile.name) issues.push("Name is required.");
+      if (Number.isNaN(profile.creditScore) || profile.creditScore < 300 || profile.creditScore > 850) {
+        issues.push("Credit score must be between 300 and 850.");
+      }
+      if (Number.isNaN(profile.utilization) || profile.utilization < 0 || profile.utilization > 100) {
+        issues.push("Utilization must be between 0 and 100.");
+      }
+      if (Number.isNaN(profile.latePayments) || profile.latePayments < 0) issues.push("Late payments cannot be negative.");
+      if (Number.isNaN(profile.collections) || profile.collections < 0) issues.push("Collections cannot be negative.");
+      if (Number.isNaN(profile.inquiries) || profile.inquiries < 0) issues.push("Inquiries cannot be negative.");
+      if (Number.isNaN(profile.oldestAccount) || profile.oldestAccount < 0) issues.push("Oldest account age cannot be negative.");
+      if (Number.isNaN(profile.annualIncome) || profile.annualIncome < 0) issues.push("Annual income must be 0 or higher.");
+      if (!profile.goal) issues.push("Select a primary credit goal.");
+      if (!profile.riskTolerance) issues.push("Select a risk tolerance.");
+      if (Number.isNaN(profile.businessAge) || profile.businessAge < 0) issues.push("Business age cannot be negative.");
+      if (Number.isNaN(profile.businessRevenue) || profile.businessRevenue < 0) issues.push("Business revenue must be 0 or higher.");
+      if (Number.isNaN(profile.vendorTradelines) || profile.vendorTradelines < 0) issues.push("Vendor tradelines cannot be negative.");
+      if (!profile.entityType) issues.push("Select an entity type.");
+
+      return issues;
+    }
+
+    function calculateProjection(profile) {
+      const utilizationRecoverable = profile.utilization > 9 ? clamp((profile.utilization - 9) * 1.15, 0, 95) : 0;
+      const lateRecoverable = clamp(profile.latePayments * 17, 0, 105);
+      const collectionsRecoverable = clamp(profile.collections * 25, 0, 125);
+      const inquiryRecoverable = clamp(profile.inquiries * 5.5, 0, 32);
+      const ageRecoverable = profile.oldestAccount < 2 ? 22 : profile.oldestAccount < 5 ? 11 : 4;
+      const tradelineRecoverable = profile.vendorTradelines < 3 ? 18 : profile.vendorTradelines < 6 ? 10 : 4;
+
+      const totalRecoverable = utilizationRecoverable + lateRecoverable + collectionsRecoverable +
+        inquiryRecoverable + ageRecoverable + tradelineRecoverable;
+
+      const fastWins = utilizationRecoverable * 0.8 + clamp(inquiryRecoverable * 0.5, 0, 12);
+      const current = clamp(profile.creditScore, 300, 850);
+      const day45 = clamp(Math.round(current + fastWins), 300, 850);
+      const month6 = clamp(Math.round(current + totalRecoverable * 0.55), 300, 850);
+      const month12 = clamp(Math.round(current + totalRecoverable * 0.88), 300, 850);
+
+      const riskScore = (profile.utilization * 0.45) +
+        (profile.latePayments * 8) +
+        (profile.collections * 12) +
+        (profile.inquiries * 3) +
+        (profile.oldestAccount < 2 ? 20 : 6);
+
+      let riskLabel = "Moderate execution risk";
+      let riskClass = "";
+      if (riskScore < 32) {
+        riskLabel = "Low execution risk";
+        riskClass = "good";
+      } else if (riskScore > 68) {
+        riskLabel = "High execution risk";
+        riskClass = "warn";
+      }
+
+      return {
+        current,
+        day45,
+        month6,
+        month12,
+        totalRecoverable: Math.round(totalRecoverable),
+        riskLabel,
+        riskClass
+      };
+    }
+
+    function buildActionPlan(profile) {
+      const actions = [];
+      const addAction = (title, why, impact, timeline, tag) => {
+        actions.push({ title, why, impact, timeline, tag });
+      };
+
+      if (profile.utilization > 30) {
+        addAction(
+          "Aggressive utilization paydown",
+          `Bring revolving utilization from ${profile.utilization}% toward 9% (ideal target 1-3%) before statement close dates.`,
+          clamp(Math.round((profile.utilization - 9) * 1.05), 12, 85),
+          "7-45 days",
+          "Fast score lift"
+        );
+      }
+
+      if (profile.latePayments > 0) {
+        addAction(
+          "Late payment suppression strategy",
+          "Set autopay on every account and send goodwill / hardship adjustment letters where history supports it.",
+          clamp(profile.latePayments * 14, 10, 70),
+          "14-120 days",
+          "Derogatory cleanup"
+        );
+      } else {
+        addAction(
+          "Protect perfect payment history",
+          "Keep all accounts on autopay + weekly cashflow checks to maintain 100% on-time reporting.",
+          18,
+          "Immediate and ongoing",
+          "Defense"
+        );
+      }
+
+      if (profile.collections > 0) {
+        addAction(
+          "Collections verification and settlement ladder",
+          "Validate every collection, dispute inaccuracies, and negotiate written deletion where available before payment.",
+          clamp(profile.collections * 20, 20, 95),
+          "10-90 days",
+          "Bureau optimization"
+        );
+      }
+
+      if (profile.inquiries > 3) {
+        addAction(
+          "Inquiry cooldown protocol",
+          `Pause all new personal applications for 90 days to let ${profile.inquiries} recent inquiries age.`,
+          clamp(profile.inquiries * 5, 10, 35),
+          "30-120 days",
+          "Stability"
+        );
+      }
+
+      if (profile.oldestAccount < 2) {
+        addAction(
+          "Age and depth builder",
+          "Add one low-fee credit-builder instrument and keep old tradelines open to thicken file depth.",
+          26,
+          "30-180 days",
+          "Credit age"
+        );
+      }
+
+      if (profile.vendorTradelines < 5) {
+        addAction(
+          "Business tradeline expansion",
+          `Increase active business tradelines from ${profile.vendorTradelines} to 5-8 with on-time net terms.`,
+          clamp((5 - profile.vendorTradelines) * 8, 8, 40),
+          "30-150 days",
+          "Business PAYDEX support"
+        );
+      }
+
+      addAction(
+        "Millionaire cashflow discipline",
+        "Never finance consumption. Use credit only for inventory, lead generation, equipment, or assets with clear ROI.",
+        20,
+        "Immediate and ongoing",
+        "Leverage intelligence"
+      );
+
+      return actions.sort((a, b) => b.impact - a.impact).slice(0, 7);
+    }
+
+    function buildRecommendations(profile) {
+      const picks = [];
+      const pushPick = (title, body, lane) => picks.push({ title, body, lane });
+
+      if (profile.creditScore < 580) {
+        pushPick("Secured rebuild card", "Use a low-limit secured card, keep utilization under 10%, and graduate in 6-12 months.", "Personal");
+        pushPick("Credit-builder installment loan", "Small installment account can support credit mix while preserving low DTI.", "Personal");
+      } else if (profile.creditScore < 670) {
+        pushPick("No-annual-fee rebuild card", "Prioritize cards that report quickly and support CLI requests after 90-180 days.", "Personal");
+        pushPick("Targeted balance transfer option", "If APR pressure is high, use 0% windows only with a strict payoff timeline.", "Personal");
+      } else if (profile.creditScore < 740) {
+        pushPick("High-limit cashback card", "Optimize spend categories tied to business ops and automate full statement payoff.", "Personal");
+        pushPick("Prime rewards + travel card", "Use only if utilization discipline is stable and no large financing event is near.", "Personal");
+      } else {
+        pushPick("Premium prime card stack", "Leverage strong score for lower APR, higher limits, and richer rewards economics.", "Personal");
+        pushPick("Strategic business-owner card pair", "Separate business/personal spending while preserving utilization optics.", "Personal");
+      }
+
+      if (!profile.hasEin || !profile.hasDuns || !profile.hasBank) {
+        pushPick(
+          "Business foundation first",
+          "Complete EIN, D-U-N-S, and dedicated bank account setup before applying for revolving business credit.",
+          "Business"
+        );
+      } else if (profile.businessRevenue < 5000) {
+        pushPick(
+          "Secured business card",
+          "Start with issuer products that accept younger revenue history and focus on on-time utilization cycles.",
+          "Business"
+        );
+      } else {
+        pushPick(
+          "Unsecured business rewards card",
+          "Use for operational spend and request line increases after consistent 90-day performance.",
+          "Business"
+        );
+        pushPick(
+          "Revenue-based growth line",
+          "For growth phases, compare factor rates and only deploy where margin can absorb financing cost.",
+          "Business"
+        );
+      }
+
+      return picks.slice(0, 6);
+    }
+
+    function buildBusinessRoadmap(profile) {
+      const steps = [];
+
+      steps.push({
+        title: "Phase 1: Foundation lock-in",
+        detail: `${profile.entityType.toUpperCase()} setup, compliance hygiene, and full bureau identity alignment.`,
+        window: "Week 1-2"
+      });
+
+      if (!profile.hasEin || !profile.hasDuns || !profile.hasBank) {
+        steps.push({
+          title: "Critical setup gap closure",
+          detail: "Complete missing EIN / D-U-N-S / business banking prerequisites before applications.",
+          window: "Week 1"
         });
+      }
 
-        const estimateForm = document.getElementById('estimateForm');
-        const quoteBox = document.getElementById('quoteBox');
+      steps.push({
+        title: "Phase 2: Tradeline acceleration",
+        detail: `Expand from ${profile.vendorTradelines} active tradelines to at least 5 with net-30 reporting vendors.`,
+        window: "Week 2-8"
+      });
 
-        estimateForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const formData = new FormData(estimateForm);
-            const name = formData.get('name');
-            const phone = formData.get('phone');
-            const service = formData.get('service');
-            const timeline = formData.get('timeline');
-            const message = formData.get('message') || 'No extra project details were added.';
+      steps.push({
+        title: "Phase 3: Revolving credit access",
+        detail: "Apply in strategic sequence (2-card max per cycle) and preserve low utilization to earn line increases.",
+        window: "Month 2-4"
+      });
 
-            quoteBox.innerHTML = `
-        <strong>Thank you, ${name}.</strong><br><br>
-        Your request for <strong>${service}</strong> was prepared successfully.<br>
-        Preferred timing: <strong>${timeline}</strong><br>
-        Phone: <strong>${phone}</strong><br><br>
-        <strong>Project details:</strong><br>
-        ${message}<br><br>
-        Next step: call <strong>Donovan</strong> at <strong>706-718-7564</strong> or <strong>Thomas</strong> at <strong>423-599-5302</strong> for fast follow-up.
+      if (profile.businessRevenue >= 10000) {
+        steps.push({
+          title: "Phase 4: Leverage for expansion",
+          detail: "Use credit for inventory turns, ad channels with known CAC/LTV, and equipment with measured payback.",
+          window: "Month 4+"
+        });
+      } else {
+        steps.push({
+          title: "Phase 4: Revenue-first leverage",
+          detail: "Prioritize repeatable revenue engine before scaling debt exposure.",
+          window: "Month 4+"
+        });
+      }
+
+      return steps;
+    }
+
+    function buildDecisionStack(profile, projection) {
+      const stack = [];
+
+      stack.push({
+        title: "Decision rule #1",
+        detail: `Protect your projected ${projection.month6} 6-month score path by keeping utilization under 10% and zero new late payments.`,
+        tag: "Score integrity"
+      });
+
+      if (profile.goal === "funding") {
+        stack.push({
+          title: "Decision rule #2",
+          detail: "Apply for new credit only when you can convert it into cashflow-positive output (inventory, sales engine, or assets).",
+          tag: "Funding discipline"
+        });
+      } else if (profile.goal === "home") {
+        stack.push({
+          title: "Decision rule #2",
+          detail: "Minimize hard inquiries and new revolving accounts 6+ months before mortgage underwriting.",
+          tag: "Mortgage readiness"
+        });
+      } else if (profile.goal === "businessGrowth") {
+        stack.push({
+          title: "Decision rule #2",
+          detail: "Separate personal and business debt pathways so personal score does not absorb business volatility.",
+          tag: "Business scaling"
+        });
+      } else {
+        stack.push({
+          title: "Decision rule #2",
+          detail: "Prioritize bureau cleanup over new applications until derogatory pressure falls and profile stabilizes.",
+          tag: "Profile cleanup"
+        });
+      }
+
+      const riskMessage = profile.riskTolerance === "high"
+        ? "Run aggressive growth cycles only when monthly debt service remains below 20% of net operating cashflow."
+        : profile.riskTolerance === "medium"
+          ? "Use balanced leverage with strict payoff timelines and monthly review of debt-to-income + utilization."
+          : "Favor conservative lines, preserve liquidity, and avoid stacking applications in short windows.";
+
+      stack.push({
+        title: "Decision rule #3",
+        detail: riskMessage,
+        tag: "Risk posture"
+      });
+
+      stack.push({
+        title: "Decision rule #4",
+        detail: `Build a 3-account reserve plan so credit is optional, not survival capital. Target reserve: ${money(Math.max(profile.annualIncome * 0.12, 6000))}.`,
+        tag: "Wealth defense"
+      });
+
+      return stack;
+    }
+
+    function renderProjection(profile, projection) {
+      projectionGrid.innerHTML = `
+        <div class="projection"><strong>${projection.current}</strong><span>Current score</span></div>
+        <div class="projection"><strong>${projection.day45}</strong><span>45-day potential</span></div>
+        <div class="projection"><strong>${projection.month6}</strong><span>6-month potential</span></div>
+        <div class="projection"><strong>${projection.month12}</strong><span>12-month potential</span></div>
       `;
-            quoteBox.classList.add('show');
-            estimateForm.reset();
-            quoteBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-    </script>
+      riskLevel.className = `level ${projection.riskClass}`;
+      riskLevel.textContent = `${escapeHtml(profile.name)} • ${projection.riskLabel} • Recoverable points model: ~${projection.totalRecoverable}`;
+    }
+
+    function renderActions(actions) {
+      actionList.innerHTML = actions.map((action) => `
+        <li class="action-item">
+          <div class="action-head">
+            <strong>${escapeHtml(action.title)}</strong>
+            <span class="pill">Impact +${action.impact}</span>
+          </div>
+          <p class="muted">${escapeHtml(action.why)}</p>
+          <div class="action-head" style="margin-top:0.35rem;">
+            <span class="pill">${escapeHtml(action.tag)}</span>
+            <span class="pill">${escapeHtml(action.timeline)}</span>
+          </div>
+        </li>
+      `).join("");
+    }
+
+    function renderRecommendations(recommendations) {
+      recommendGrid.innerHTML = recommendations.map((item) => `
+        <article class="recommend">
+          <div class="action-head">
+            <strong>${escapeHtml(item.title)}</strong>
+            <span class="pill">${escapeHtml(item.lane)}</span>
+          </div>
+          <p>${escapeHtml(item.body)}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderRoadmap(steps) {
+      businessRoadmap.innerHTML = steps.map((step) => `
+        <li class="stack-item">
+          <div class="stack-head">
+            <strong>${escapeHtml(step.title)}</strong>
+            <span class="pill">${escapeHtml(step.window)}</span>
+          </div>
+          <p class="muted">${escapeHtml(step.detail)}</p>
+        </li>
+      `).join("");
+    }
+
+    function renderDecisionStack(items) {
+      decisionStack.innerHTML = items.map((item) => `
+        <li class="stack-item">
+          <div class="stack-head">
+            <strong>${escapeHtml(item.title)}</strong>
+            <span class="pill">${escapeHtml(item.tag)}</span>
+          </div>
+          <p class="muted">${escapeHtml(item.detail)}</p>
+        </li>
+      `).join("");
+    }
+
+    function showError(issues) {
+      errorBox.style.display = "block";
+      errorBox.innerHTML = `<strong>Please fix the following:</strong><br>${issues.map((issue) => `• ${escapeHtml(issue)}`).join("<br>")}`;
+    }
+
+    function hideError() {
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const profile = readFormData();
+      const issues = validate(profile);
+
+      if (issues.length > 0) {
+        showError(issues);
+        return;
+      }
+
+      hideError();
+      const projection = calculateProjection(profile);
+      const actions = buildActionPlan(profile);
+      const recommendations = buildRecommendations(profile);
+      const roadmap = buildBusinessRoadmap(profile);
+      const decisions = buildDecisionStack(profile, projection);
+
+      renderProjection(profile, projection);
+      renderActions(actions);
+      renderRecommendations(recommendations);
+      renderRoadmap(roadmap);
+      renderDecisionStack(decisions);
+    });
+
+    demoFillButton.addEventListener("click", () => {
+      document.getElementById("name").value = "Jordan";
+      document.getElementById("creditScore").value = "512";
+      document.getElementById("utilization").value = "81";
+      document.getElementById("latePayments").value = "4";
+      document.getElementById("collections").value = "2";
+      document.getElementById("inquiries").value = "5";
+      document.getElementById("oldestAccount").value = "1";
+      document.getElementById("annualIncome").value = "84000";
+      document.getElementById("goal").value = "businessGrowth";
+      document.getElementById("riskTolerance").value = "medium";
+      document.getElementById("businessAge").value = "7";
+      document.getElementById("businessRevenue").value = "9200";
+      document.getElementById("vendorTradelines").value = "2";
+      document.getElementById("entityType").value = "llc";
+      document.getElementById("hasEin").checked = true;
+      document.getElementById("hasDuns").checked = false;
+      document.getElementById("hasBank").checked = true;
+      document.getElementById("context").value = "Need to prepare for larger vendor terms and a vehicle in 6-9 months.";
+    });
+  </script>
 </body>
 
 </html>
