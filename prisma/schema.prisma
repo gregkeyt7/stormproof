@@ -1,0 +1,251 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TradingMode {
+  PAPER
+  LIVE
+}
+
+enum TradeResult {
+  OPEN
+  WIN
+  LOSS
+  BREAKEVEN
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  accounts     Account[]
+  strategies   Strategy[]
+  riskSettings RiskSetting[]
+  trades       Trade[]
+  backtests    Backtest[]
+  botLogs      BotLog[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String      @id @default(cuid())
+  userId            String
+  broker            String
+  mode              TradingMode @default(PAPER)
+  balance           Decimal     @db.Decimal(18, 8)
+  peakBalance       Decimal     @db.Decimal(18, 8)
+  emergencyStop     Boolean     @default(false)
+  killSwitchArmed   Boolean     @default(true)
+  apiKeyCiphertext  String?
+  apiSecretCiphertext String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades            Trade[]
+  paperTrades       PaperTrade[]
+  liveTrades        LiveTrade[]
+  taxReserves       TaxReserve[]
+  signals           Signal[]
+  marketSnapshots   MarketSnapshot[]
+
+  @@map("accounts")
+}
+
+model Strategy {
+  id                   String   @id @default(cuid())
+  userId               String
+  name                 String
+  enabled              Boolean  @default(true)
+  minConfidence        Float    @default(62)
+  minRewardRiskRatio   Float    @default(2)
+  maxSpreadBps         Float    @default(18)
+  maxSlippageBps       Float    @default(12)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  signals              Signal[]
+  trades               Trade[]
+
+  @@unique([userId, name])
+  @@map("strategies")
+}
+
+model Signal {
+  id              String      @id @default(cuid())
+  accountId       String
+  strategyId      String
+  symbol          String
+  direction       String
+  confidence      Float
+  regime          String
+  reasons         Json
+  createdAt       DateTime    @default(now())
+  account         Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  strategy        Strategy    @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+
+  @@map("signals")
+}
+
+model Trade {
+  id              String      @id @default(cuid())
+  userId          String
+  accountId       String
+  strategyId      String?
+  mode            TradingMode
+  symbol          String
+  direction       String
+  entryPrice      Decimal     @db.Decimal(18, 8)
+  stopLoss        Decimal     @db.Decimal(18, 8)
+  takeProfit      Decimal     @db.Decimal(18, 8)
+  quantity        Decimal     @db.Decimal(18, 8)
+  confidence      Float
+  riskAmount      Decimal     @db.Decimal(18, 8)
+  rewardRiskRatio Float
+  expectedValue   Float
+  maxPossibleLoss Decimal     @db.Decimal(18, 8)
+  entryReason     String
+  exitReason      String?
+  marketCondition String
+  result          TradeResult @default(OPEN)
+  realizedPnl     Decimal     @default(0) @db.Decimal(18, 8)
+  unrealizedPnl   Decimal     @default(0) @db.Decimal(18, 8)
+  lessonLearned   String?
+  screenshotUrl   String?
+  openedAt        DateTime    @default(now())
+  closedAt        DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account         Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  strategy        Strategy?   @relation(fields: [strategyId], references: [id], onDelete: SetNull)
+  paperTrade      PaperTrade?
+  liveTrade       LiveTrade?
+
+  @@map("trades")
+}
+
+model PaperTrade {
+  id             String   @id @default(cuid())
+  accountId      String
+  tradeId        String   @unique
+  simulatedFee   Decimal  @db.Decimal(18, 8)
+  simulatedSlippageBps Float
+  createdAt      DateTime @default(now())
+  account        Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  trade          Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@map("paper_trades")
+}
+
+model LiveTrade {
+  id             String   @id @default(cuid())
+  accountId      String
+  tradeId        String   @unique
+  brokerOrderId  String
+  exchange       String
+  createdAt      DateTime @default(now())
+  account        Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  trade          Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@map("live_trades")
+}
+
+model Backtest {
+  id             String   @id @default(cuid())
+  userId         String
+  strategyName   String
+  symbol         String
+  timeframe      String
+  tradeCount     Int
+  winRate        Float
+  profitFactor   Float
+  maxDrawdownPct Float
+  averageWin     Float
+  averageLoss    Float
+  sharpeRatio    Float
+  totalReturnPct Float
+  passed         Boolean
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("backtests")
+}
+
+model RiskSetting {
+  id                           String   @id @default(cuid())
+  userId                       String
+  maxRiskPerTradePct           Float    @default(1)
+  maxDailyLossPct              Float    @default(3)
+  maxOpenTrades                Int      @default(2)
+  maxDrawdownPct               Float    @default(10)
+  minRewardRiskRatio           Float    @default(2)
+  minConfidence                Float    @default(62)
+  cooldownAfterConsecutiveLosses Int    @default(2)
+  maxTradesPerDay              Int      @default(8)
+  maxSpreadBps                 Float    @default(18)
+  maxSlippageBps               Float    @default(12)
+  minimumSafeBalance           Decimal  @default(20) @db.Decimal(18, 8)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  user                         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("risk_settings")
+}
+
+model TaxReserve {
+  id                  String   @id @default(cuid())
+  accountId           String
+  periodDate          DateTime
+  realizedProfit      Decimal  @db.Decimal(18, 8)
+  taxReserveAmount    Decimal  @db.Decimal(18, 8)
+  reinvestAmount      Decimal  @db.Decimal(18, 8)
+  withdrawalAmount    Decimal  @db.Decimal(18, 8)
+  createdAt           DateTime @default(now())
+  account             Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, periodDate])
+  @@map("tax_reserves")
+}
+
+model BotLog {
+  id         String   @id @default(cuid())
+  userId     String
+  level      String
+  message    String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bot_logs")
+}
+
+model MarketSnapshot {
+  id              String   @id @default(cuid())
+  accountId       String
+  symbol          String
+  price           Decimal  @db.Decimal(18, 8)
+  bid             Decimal  @db.Decimal(18, 8)
+  ask             Decimal  @db.Decimal(18, 8)
+  spreadBps       Float
+  volume          Float
+  volatilityPct   Float
+  indicators      Json
+  regime          String
+  newsRiskHigh    Boolean
+  dataDelayMs     Int
+  liquidityScore  Float
+  createdAt       DateTime @default(now())
+  account         Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, symbol, createdAt])
+  @@map("market_snapshots")
+}
