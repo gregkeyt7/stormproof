@@ -1,0 +1,214 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum DocumentSourceType {
+  UPLOAD
+  PDF
+  IMAGE
+  CSV
+  SUMMARY
+  OTHER
+}
+
+enum DocumentStatus {
+  UPLOADED
+  ANALYZED
+  FAILED
+}
+
+enum DisputeStatus {
+  OPEN
+  SUBMITTED
+  RESPONDED
+  ESCALATED
+  CLOSED
+}
+
+enum LetterType {
+  INACCURATE_BALANCE
+  DUPLICATE_ACCOUNT
+  UNKNOWN_ACCOUNT
+  LATE_PAYMENT_ERROR
+  CHARGEOFF_ERROR
+  INQUIRY_NOT_AUTHORIZED
+  COLLECTION_NOT_MINE
+  GOODWILL_REQUEST
+  DEBT_VALIDATION
+  METHOD_OF_VERIFICATION
+  CEASE_COMMUNICATION
+  SETTLEMENT_NEGOTIATION
+}
+
+model User {
+  id               String             @id @default(cuid())
+  email            String             @unique
+  passwordHash     String
+  name             String
+  role             UserRole           @default(USER)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  creditProfiles   CreditProfile[]
+  forensicAnalyses ForensicAnalysis[]
+  businessProfiles BusinessProfile[]
+  businessPlans    BusinessPlan[]
+  disputeCases     DisputeCase[]
+  disputeLetters   DisputeLetter[]
+  simulationRuns   SimulationRun[]
+  uploadedDocs     UploadedDocument[]
+  auditLogs        AuditLog[]
+}
+
+model CreditProfile {
+  id            String             @id @default(cuid())
+  userId        String
+  profileName   String?
+  creditScore   Int
+  utilization   Float
+  latePayments  Int
+  collections   Int
+  inquiries     Int
+  oldestAccountYears Float
+  revolvingDebt Float
+  installmentDebt Float
+  accountsOpen  Int
+  annualIncome  Float
+  debtToIncome  Float
+  sourceDocumentId String?
+  rawInput      Json?
+  createdAt     DateTime           @default(now())
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analyses      ForensicAnalysis[]
+}
+
+model ForensicAnalysis {
+  id                         String        @id @default(cuid())
+  userId                     String
+  creditProfileId            String?
+  scoreSuppressionFactors    Json
+  scoreSuppressionScore      Float
+  lenderPerception           Json
+  approvalRiskScore          Float
+  utilizationOptimizationMap Json
+  fastestImpactActions       Json
+  aiNarrative                String?
+  createdAt                  DateTime      @default(now())
+  user                       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creditProfile              CreditProfile? @relation(fields: [creditProfileId], references: [id], onDelete: SetNull)
+}
+
+model UploadedDocument {
+  id              String             @id @default(cuid())
+  userId          String
+  sourceType      DocumentSourceType
+  status          DocumentStatus     @default(UPLOADED)
+  originalName    String
+  storedName      String
+  mimeType        String
+  byteSize        Int
+  diskPath        String
+  extractedText   String?
+  extractedJson   Json?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DisputeCase {
+  id               String        @id @default(cuid())
+  userId           String
+  bureau           String
+  creditorName     String
+  accountType      String
+  issueType        String
+  accountReference String?
+  userGoal         String
+  facts            Json
+  evidence         Json
+  timelineNotes    Json?
+  status           DisputeStatus @default(OPEN)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  letters          DisputeLetter[]
+}
+
+model DisputeLetter {
+  id                String      @id @default(cuid())
+  userId            String
+  disputeCaseId     String?
+  letterType        LetterType
+  subject           String
+  body              String
+  requiresReview    Boolean     @default(true)
+  complianceNotes   String?
+  createdAt         DateTime    @default(now())
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  disputeCase       DisputeCase? @relation(fields: [disputeCaseId], references: [id], onDelete: SetNull)
+}
+
+model BusinessProfile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  entityType         String
+  businessAgeMonths  Int
+  monthlyRevenue     Float
+  hasEin             Boolean
+  hasDuns            Boolean
+  hasBusinessBank    Boolean
+  vendorTradelines   Int
+  readinessScore     Float
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plans              BusinessPlan[]
+}
+
+model BusinessPlan {
+  id              String   @id @default(cuid())
+  userId          String
+  profileId       String
+  lenderRiskTier  String
+  readinessScore  Float
+  recommendations Json
+  sequencingPlan  Json
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile         BusinessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model SimulationRun {
+  id                 String   @id @default(cuid())
+  userId             String
+  input              Json
+  output             Json
+  currentScore       Int
+  projectedScore     Int
+  approvalOddsBefore Float
+  approvalOddsAfter  Float
+  createdAt          DateTime @default(now())
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String?
+  entityId   String?
+  details    Json?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
