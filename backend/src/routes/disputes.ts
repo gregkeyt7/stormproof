@@ -108,7 +108,7 @@ disputeRouter.get("/letters/:letterId", requireAuth, async (req, res, next) => {
   try {
     const letter = await prisma.disputeLetter.findFirst({
       where: {
-        id: req.params.letterId,
+        id: String(req.params.letterId),
         userId: req.user!.id,
       },
       include: {
@@ -130,7 +130,7 @@ disputeRouter.patch("/cases/:caseId/status", requireAuth, async (req, res, next)
   try {
     const payload = statusSchema.parse(req.body);
     const existing = await prisma.disputeCase.findFirst({
-      where: { id: req.params.caseId, userId: req.user!.id },
+      where: { id: String(req.params.caseId), userId: req.user!.id },
     });
     if (!existing) {
       throw new HttpError(404, "Dispute case not found.");

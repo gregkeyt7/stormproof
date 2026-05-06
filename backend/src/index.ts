@@ -10,7 +10,7 @@ import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 import { authRouter } from "./routes/auth";
 import { uploadsRouter } from "./routes/uploads";
 import { forensicsRouter } from "./routes/forensics";
-import { disputesRouter } from "./routes/disputes";
+import { disputeRouter } from "./routes/disputes";
 import { simulatorRouter } from "./routes/simulator";
 import { businessRouter } from "./routes/business";
 import { adminRouter } from "./routes/admin";
@@ -40,7 +40,7 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/uploads", uploadsRouter);
 app.use("/api/forensics", forensicsRouter);
-app.use("/api/disputes", disputesRouter);
+app.use("/api/disputes", disputeRouter);
 app.use("/api/simulator", simulatorRouter);
 app.use("/api/business", businessRouter);
 app.use("/api/admin", adminRouter);

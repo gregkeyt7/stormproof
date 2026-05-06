@@ -14,7 +14,10 @@ export type EncryptionMetadata = {
   authTag: string;
 };
 
-export function encryptBuffer(buffer: Buffer): { encrypted: Buffer; metadata: EncryptionMetadata } {
+export function encryptBuffer(buffer: Buffer): {
+  encrypted: Buffer;
+  metadata: EncryptionMetadata;
+} {
   const iv = crypto.randomBytes(12);
   const cipher = crypto.createCipheriv(ENC_ALGO, KEY, iv);
   const encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
@@ -24,8 +27,8 @@ export function encryptBuffer(buffer: Buffer): { encrypted: Buffer; metadata: En
     encrypted,
     metadata: {
       iv: iv.toString("hex"),
-      authTag: authTag.toString("hex")
-    }
+      authTag: authTag.toString("hex"),
+    },
   };
 }
 
@@ -37,6 +40,14 @@ export function decryptBuffer(buffer: Buffer, metadata: EncryptionMetadata): Buf
   );
   decipher.setAuthTag(Buffer.from(metadata.authTag, "hex"));
   return Buffer.concat([decipher.update(buffer), decipher.final()]);
+}
+
+export function encryptData(buffer: Buffer): { data: Buffer; iv: Buffer; authTag: Buffer } {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv(ENC_ALGO, KEY, iv);
+  const data = Buffer.concat([cipher.update(buffer), cipher.final()]);
+  const authTag = cipher.getAuthTag();
+  return { data, iv, authTag };
 }
 
 export async function encryptFileInPlace(path: string): Promise<EncryptionMetadata> {

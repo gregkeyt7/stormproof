@@ -59,7 +59,7 @@ forensicsRouter.post("/analyze", requireAuth, async (req, res, next) => {
         scoreSuppressionScore: analysis.scoreSuppressionScore,
         lenderPerception: analysis.lenderPerception,
         scoreSuppressionFactors: analysis.scoreSuppressionFactors as object,
-        utilizationMap: analysis.utilizationOptimizationMap as object,
+        utilizationOptimizationMap: analysis.utilizationOptimizationMap as object,
         fastestImpactActions: analysis.fastestImpactActions as object,
         aiNarrative,
       },

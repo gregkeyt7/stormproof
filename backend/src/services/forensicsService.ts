@@ -1,16 +1,15 @@
-import type { CreditProfile } from "@prisma/client";
-
 export type ForensicInput = {
   creditScore: number;
   utilization: number;
   latePayments: number;
   collections: number;
-  hardInquiries: number;
+  inquiries: number;
   oldestAccountYears: number;
   debtToIncome: number;
   revolvingDebt: number;
   installmentDebt: number;
-  monthlyIncome: number;
+  annualIncome: number;
+  accountsOpen: number;
 };
 
 export type ForensicOutput = {
@@ -46,11 +45,14 @@ const severityFromPoints = (points: number): "low" | "medium" | "high" => {
   return "low";
 };
 
-export const buildForensicAnalysis = (input: ForensicInput): ForensicOutput => {
+export const runForensicAnalysis = (input: ForensicInput): ForensicOutput & {
+  scoreSuppressionScore: number;
+  scoreSuppressionFactors: ForensicOutput["suppressionBreakdown"];
+} => {
   const utilizationPenalty = input.utilization > 9 ? Math.round((input.utilization - 9) * 1.15) : 0;
   const latePenalty = input.latePayments * 17;
   const collectionPenalty = input.collections * 26;
-  const inquiryPenalty = input.hardInquiries * 6;
+  const inquiryPenalty = input.inquiries * 6;
   const agePenalty = input.oldestAccountYears < 2 ? 20 : input.oldestAccountYears < 5 ? 10 : 3;
   const dtiPenalty = input.debtToIncome > 43 ? Math.round((input.debtToIncome - 43) * 1.3) : 0;
 
@@ -91,7 +93,7 @@ export const buildForensicAnalysis = (input: ForensicInput): ForensicOutput => {
   if (input.utilization > 30) weaknesses.push(`Utilization is elevated at ${input.utilization}% (target 1-9%).`);
   if (input.latePayments > 0) weaknesses.push(`${input.latePayments} late payments are suppressing payment-history confidence.`);
   if (input.collections > 0) weaknesses.push(`${input.collections} derogatory accounts are increasing approval risk.`);
-  if (input.hardInquiries > 3) weaknesses.push(`${input.hardInquiries} recent hard inquiries suggest aggressive credit-seeking.`);
+  if (input.inquiries > 3) weaknesses.push(`${input.inquiries} recent hard inquiries suggest aggressive credit-seeking.`);
   if (input.debtToIncome > 43) weaknesses.push(`Debt-to-income at ${input.debtToIncome}% exceeds many lender comfort thresholds.`);
   if (input.oldestAccountYears < 2) weaknesses.push("Thin or young file depth is weakening stability signals.");
 
@@ -128,14 +130,20 @@ export const buildForensicAnalysis = (input: ForensicInput): ForensicOutput => {
     }
   ].sort((a, b) => b.expectedImpact - a.expectedImpact);
 
-  const approvalRiskScore = Math.max(1, Math.min(100, Math.round(
+  const approvalRiskScore = Math.max(
+    1,
+    Math.min(
+      100,
+      Math.round(
     (100 - input.creditScore / 8.5) +
     utilizationPenalty * 0.3 +
     latePenalty * 0.3 +
     collectionPenalty * 0.35 +
     inquiryPenalty * 0.2 +
     dtiPenalty * 0.2
-  )));
+      )
+    )
+  );
 
   let profileTier: ForensicOutput["lenderPerception"]["profileTier"] = "near-prime";
   if (approvalRiskScore > 70) profileTier = "high-risk";
@@ -154,11 +162,15 @@ export const buildForensicAnalysis = (input: ForensicInput): ForensicOutput => {
   const targetBalance = totalRevolvingLimit > 0 ? Math.round(totalRevolvingLimit * (targetUtilization / 100)) : 0;
   const payoffNeeded = Math.max(0, input.revolvingDebt - targetBalance);
 
+  const scoreSuppressionScore = Math.max(0, Math.min(100, Math.round(totalSuppression * 0.45)));
+
   return {
     weaknessSummary: weaknesses,
     suppressionBreakdown,
     fastestImpactActions,
     approvalRiskScore,
+    scoreSuppressionScore,
+    scoreSuppressionFactors: suppressionBreakdown,
     lenderPerception: {
       profileTier,
       narrative: lenderNarrative
@@ -172,18 +184,4 @@ export const buildForensicAnalysis = (input: ForensicInput): ForensicOutput => {
   };
 };
 
-export const toForensicInputFromProfile = (profile: CreditProfile): ForensicInput => {
-  const raw = (profile.rawInput ?? {}) as Record<string, unknown>;
-  return {
-    creditScore: profile.creditScore,
-    utilization: profile.utilization,
-    latePayments: profile.latePayments,
-    collections: profile.collections,
-    hardInquiries: profile.hardInquiries,
-    oldestAccountYears: profile.oldestAccountYears,
-    debtToIncome: profile.debtToIncome,
-    revolvingDebt: Number(raw.revolvingDebt ?? 0),
-    installmentDebt: Number(raw.installmentDebt ?? 0),
-    monthlyIncome: Number(raw.monthlyIncome ?? 0)
-  };
-};
+export const buildForensicAnalysis = runForensicAnalysis;

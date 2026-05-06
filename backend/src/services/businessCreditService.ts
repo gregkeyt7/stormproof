@@ -4,8 +4,9 @@ type BusinessInput = {
   vendorTradelines: number;
   hasEin: boolean;
   hasDuns: boolean;
-  hasBusinessBankAccount: boolean;
+  hasBusinessBank: boolean;
   entityType: string;
+  personalScore: number;
 };
 
 type BusinessPlanStep = {
@@ -23,7 +24,7 @@ export function buildBusinessCreditPlan(input: BusinessInput) {
   const foundationScore = clamp(
     (input.hasEin ? 18 : 0) +
       (input.hasDuns ? 16 : 0) +
-      (input.hasBusinessBankAccount ? 16 : 0) +
+      (input.hasBusinessBank ? 16 : 0) +
       (input.entityType === "llc" || input.entityType === "sCorp" || input.entityType === "cCorp" ? 12 : 6),
     0,
     62,
@@ -40,7 +41,7 @@ export function buildBusinessCreditPlan(input: BusinessInput) {
   const readinessScore = clamp(Math.round(foundationScore + maturityScore), 0, 100);
 
   const steps: BusinessPlanStep[] = [];
-  if (!input.hasEin || !input.hasDuns || !input.hasBusinessBankAccount) {
+  if (!input.hasEin || !input.hasDuns || !input.hasBusinessBank) {
     steps.push({
       step: "Complete fundability prerequisites",
       detail: "Finalize EIN, D-U-N-S, and dedicated business banking before credit applications.",
@@ -89,10 +90,28 @@ export function buildBusinessCreditPlan(input: BusinessInput) {
     "Industry-specific suppliers with net-30/45 options and bureau reporting",
   ];
 
+  const lenderRiskTier =
+    readinessScore >= 75 ? "LOW" : readinessScore >= 50 ? "MODERATE" : "HIGH";
+
+  const recommendations = [
+    ...steps.map((step) => `${step.step}: ${step.detail}`),
+    `Personal score anchor (${input.personalScore}) should stay above 680 for strongest unsecured business options.`,
+  ];
+
+  const sequencingPlan = [
+    "Phase 1: Foundation alignment (EIN/DUNS/banking + consistency checks)",
+    "Phase 2: Vendor trade depth expansion (5-8 reporting accounts)",
+    "Phase 3: Revolving products in controlled 2-card cycles",
+    "Phase 4: Documented leverage tied to measurable ROI",
+  ];
+
   return {
     readinessScore,
+    lenderRiskTier,
     lenderRiskSignals,
     vendorSuggestions,
     steps,
+    recommendations,
+    sequencingPlan,
   };
 }

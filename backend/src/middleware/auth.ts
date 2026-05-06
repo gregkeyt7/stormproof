@@ -13,7 +13,7 @@ export async function requireAuth(req: Request, _res: Response, next: NextFuncti
     const token = authHeader.slice("Bearer ".length);
     const payload = verifyAccessToken(token);
     const user = await prisma.user.findUnique({
-      where: { id: payload.sub },
+      where: { id: payload.userId },
       select: { id: true, email: true, role: true, name: true },
     });
 

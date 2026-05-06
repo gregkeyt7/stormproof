@@ -1,50 +1,64 @@
-import { z } from "zod";
+type SimulationInput = {
+  currentScore: number;
+  utilization: number;
+  latePayments: number;
+  collections: number;
+  inquiries: number;
+  newAccounts: number;
+  balanceTransfer: number;
+  creditLimitIncrease: number;
+  payoffAmount: number;
+};
 
-const simulatorInputSchema = z.object({
-  currentScore: z.number().min(300).max(850),
-  utilization: z.number().min(0).max(100),
-  totalDebt: z.number().min(0),
-  inquiryCount: z.number().min(0).max(20),
-  plannedPaydown: z.number().min(0),
-  newAccounts: z.number().min(0).max(6),
-  balanceTransfer: z.boolean(),
-  requestedCliPercent: z.number().min(0).max(200)
-});
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
 
-export type SimulatorInput = z.infer<typeof simulatorInputSchema>;
+export function simulateCreditScenario(input: SimulationInput) {
+  const utilizationDropByPayoff = input.payoffAmount > 0 ? Math.min(45, input.payoffAmount / 2000) : 0;
+  const utilizationDropByTransfer = input.balanceTransfer * 0.35;
+  const utilizationDropByCli = input.creditLimitIncrease / 5000;
+  const utilizationAfter = clamp(
+    input.utilization - utilizationDropByPayoff - utilizationDropByTransfer - utilizationDropByCli,
+    0,
+    100
+  );
 
-export function runCreditSimulation(input: unknown) {
-  const data = simulatorInputSchema.parse(input);
+  const utilizationLift = clamp((input.utilization - utilizationAfter) * 1.25, 0, 80);
+  const derogatoryPenalty = input.latePayments * 6 + input.collections * 10;
+  const inquiryPenalty = input.inquiries * 2.4 + input.newAccounts * 6;
+  const netDelta = Math.round(utilizationLift - inquiryPenalty - derogatoryPenalty * 0.18);
 
-  const utilizationAfterPaydown = data.totalDebt > 0
-    ? Math.max(0, data.utilization - (data.plannedPaydown / data.totalDebt) * data.utilization)
-    : data.utilization;
-  const utilizationAfterCli = Math.max(0, utilizationAfterPaydown - data.requestedCliPercent * 0.2);
+  const projectedScore = clamp(input.currentScore + netDelta, 300, 850);
+  const approvalOddsBefore = clamp(
+    input.currentScore < 580 ? 20 : input.currentScore < 670 ? 48 : input.currentScore < 740 ? 70 : 88,
+    5,
+    98
+  );
+  const approvalOddsAfter = clamp(
+    projectedScore < 580 ? 22 : projectedScore < 670 ? 54 : projectedScore < 740 ? 78 : 93,
+    8,
+    99
+  );
 
-  const utilizationLift = Math.max(0, (data.utilization - utilizationAfterCli) * 1.2);
-  const inquiryPenalty = data.newAccounts * 6 + data.inquiryCount * 2;
-  const balanceTransferLift = data.balanceTransfer ? 12 : 0;
-  const netDelta = Math.round(utilizationLift + balanceTransferLift - inquiryPenalty);
-
-  const projectedScore = Math.max(300, Math.min(850, data.currentScore + netDelta));
-  const approvalOdds = Math.max(10, Math.min(96, projectedScore < 580 ? 22 : projectedScore < 670 ? 47 : projectedScore < 740 ? 72 : 89));
-
-  const lenderPerception = projectedScore < 620
-    ? "Subprime risk lens; expect conservative underwriting."
-    : projectedScore < 700
-      ? "Near-prime profile; approvals improve with clean recent behavior."
-      : "Prime profile trajectory; stronger terms likely with stable DTI.";
+  const lenderPerceptionShift =
+    projectedScore > input.currentScore
+      ? "Underwriting profile improves with stronger utilization optics and lower immediate risk signals."
+      : "Underwriting profile remains fragile; prioritize profile cleanup before additional applications.";
 
   return {
     projectedScore,
-    delta: netDelta,
-    utilizationAfter: Number(utilizationAfterCli.toFixed(1)),
-    approvalOdds,
-    lenderPerception,
-    assumptions: [
-      "No new late payments reported during simulation window.",
-      "Balances update at statement cycle intervals.",
-      "Lender models vary by bureau and product."
+    scoreDelta: projectedScore - input.currentScore,
+    utilizationAfter: Number(utilizationAfter.toFixed(1)),
+    approvalOddsBefore,
+    approvalOddsAfter,
+    lenderPerceptionShift,
+    keyAssumptions: [
+      "No new derogatories occur during simulation horizon.",
+      "All score impacts are directional estimates and may vary by lender model.",
+      "Statement-cycle timing affects when score changes appear."
     ]
   };
 }
+
+export { simulateCreditScenario as runCreditSimulation };

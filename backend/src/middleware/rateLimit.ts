@@ -40,3 +40,5 @@ export function apiRateLimit(req: Request, res: Response, next: NextFunction): v
       });
     });
 }
+
+export const globalLimiter = apiRateLimit;

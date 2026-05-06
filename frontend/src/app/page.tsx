@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
@@ -83,7 +83,7 @@ const API_BASE_URL =
 const fadeIn = {
   initial: { opacity: 0, y: 18 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, ease: "easeOut" },
+  transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const },
 };
 
 export default function Home() {
@@ -168,23 +168,21 @@ export default function Home() {
     objective: "Prepare for unsecured business lines and better lender profile.",
   });
 
-  const chartData = useMemo(() => {
-    if (!forensics) return [];
-    return [
-      { label: "Now", score: forensics.projection.current },
-      { label: "45 Days", score: forensics.projection.day45 },
-      { label: "6 Months", score: forensics.projection.month6 },
-      { label: "12 Months", score: forensics.projection.month12 },
-    ];
-  }, [forensics]);
+  const chartData = forensics
+    ? [
+        { label: "Now", score: forensics.projection.current },
+        { label: "45 Days", score: forensics.projection.day45 },
+        { label: "6 Months", score: forensics.projection.month6 },
+        { label: "12 Months", score: forensics.projection.month12 },
+      ]
+    : [];
 
-  const breakdownData = useMemo(() => {
-    if (!forensics) return [];
-    return Object.entries(forensics.suppressionBreakdown).map(([key, value]) => ({
-      factor: key.replaceAll("_", " "),
-      points: value,
-    }));
-  }, [forensics]);
+  const breakdownData = forensics
+    ? Object.entries(forensics.suppressionBreakdown).map(([key, value]) => ({
+        factor: key.replaceAll("_", " "),
+        points: value,
+      }))
+    : [];
 
   async function callApi<T>(
     endpoint: string,

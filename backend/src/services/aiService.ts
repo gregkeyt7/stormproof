@@ -1,147 +1,110 @@
-import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { ChatOpenAI } from "@langchain/openai";
 import OpenAI from "openai";
 import { env } from "../config";
 
-type ForensicAiInput = {
-  profileSummary: string;
-  weaknesses: string[];
-  targetGoal: string;
-};
-
-type LetterAiInput = {
-  letterType: string;
-  bureau: string;
-  creditor: string;
-  issueType: string;
-  accountContext: string;
-  evidenceSummary: string;
-  objective: string;
+type ForensicSummaryInput = {
+  weaknessSummary: string[];
+  suppressionBreakdown: Array<{ category: string; estimatedPointsSuppressed: number }>;
+  fastestImpactActions: Array<{ title: string; expectedImpact: number; timelineDays: number }>;
+  lenderPerception: { narrative: string; profileTier: string };
+  approvalRiskScore: number;
+  primaryGoal?: string;
 };
 
 class AiService {
-  private readonly openAiClient: OpenAI | null;
-  private readonly langChainModel: ChatOpenAI | null;
+  private readonly openaiClient: OpenAI | null;
+  private readonly lcModel: ChatOpenAI | null;
 
   constructor() {
-    if (!env.OPENAI_API_KEY) {
-      this.openAiClient = null;
-      this.langChainModel = null;
+    if (!env.openAiApiKey) {
+      this.openaiClient = null;
+      this.lcModel = null;
       return;
     }
 
-    this.openAiClient = new OpenAI({
-      apiKey: env.OPENAI_API_KEY
-    });
-
-    this.langChainModel = new ChatOpenAI({
-      apiKey: env.OPENAI_API_KEY,
-      model: env.OPENAI_MODEL,
-      temperature: 0.2
-    });
-  }
-
-  async generateForensicNarrative(input: ForensicAiInput): Promise<string> {
-    if (!this.langChainModel) {
-      return [
-        "CreditTitan AI Forensic Summary",
-        `Goal: ${input.targetGoal}`,
-        `Profile snapshot: ${input.profileSummary}`,
-        "Primary weaknesses:",
-        ...input.weaknesses.map((item) => `- ${item}`),
-        "Execution note: focus on rapid utilization suppression, dispute packet quality, and conservative inquiry behavior."
-      ].join("\n");
-    }
-
-    const messages = [
-      new SystemMessage(
-        "You are an elite private financial intelligence assistant. Be factual, concise, lawful, and never invent evidence."
-      ),
-      new HumanMessage(
-        `Generate a clear forensic credit analysis narrative with tactical priorities.
-Goal: ${input.targetGoal}
-Profile summary: ${input.profileSummary}
-Weaknesses: ${input.weaknesses.join("; ")}
-
-Return 3 sections:
-1) What is suppressing score
-2) High-impact actions in order
-3) Lender perception and approval readiness`
-      )
-    ];
-
-    const response = await this.langChainModel.invoke(messages);
-    return response.text;
-  }
-
-  async generateDisputeLetter(input: LetterAiInput): Promise<{ subject: string; body: string }> {
-    const fallbackSubject = `${input.letterType} Request - ${input.creditor}`;
-    const fallbackBody = `To Whom It May Concern,
-
-I am requesting a formal review of the following reporting item:
-
-Bureau: ${input.bureau}
-Creditor: ${input.creditor}
-Issue: ${input.issueType}
-Account context: ${input.accountContext}
-
-Supporting facts:
-${input.evidenceSummary}
-
-Requested resolution:
-${input.objective}
-
-Please investigate this matter and provide written confirmation of your findings.
-
-Sincerely,
-[Your Name]
-[Address]
-[Date]`;
-
-    if (!this.openAiClient) {
-      return { subject: fallbackSubject, body: fallbackBody };
-    }
-
-    const completion = await this.openAiClient.responses.create({
-      model: env.OPENAI_MODEL,
+    this.openaiClient = new OpenAI({ apiKey: env.openAiApiKey });
+    this.lcModel = new ChatOpenAI({
+      apiKey: env.openAiApiKey,
+      model: env.openAiModel,
       temperature: 0.2,
-      input: [
-        {
-          role: "system",
-          content:
-            "You draft professional dispute and credit correspondence. Remain factual, lawful, and do not fabricate evidence."
-        },
-        {
-          role: "user",
-          content: `Draft a ${input.letterType} letter.
-
-Bureau: ${input.bureau}
-Creditor: ${input.creditor}
-Issue type: ${input.issueType}
-Account context: ${input.accountContext}
-Evidence summary: ${input.evidenceSummary}
-Objective: ${input.objective}
-
-Return this exact format:
-SUBJECT: ...
-BODY:
-...`
-        }
-      ]
     });
+  }
 
-    const text = completion.output_text?.trim();
-    if (!text) {
-      return { subject: fallbackSubject, body: fallbackBody };
+  async generateText(prompt: string, fallback: string): Promise<string> {
+    if (!this.openaiClient) {
+      return fallback;
     }
 
-    const subjectMatch = text.match(/SUBJECT:\s*(.+)/i);
-    const bodyMatch = text.match(/BODY:\s*([\s\S]+)/i);
-    return {
-      subject: subjectMatch?.[1]?.trim() || fallbackSubject,
-      body: bodyMatch?.[1]?.trim() || fallbackBody
-    };
+    try {
+      const response = await this.openaiClient.responses.create({
+        model: env.openAiModel,
+        input: [
+          {
+            role: "system",
+            content:
+              "You are a private financial intelligence assistant. Be factual, lawful, and never fabricate claims or evidence.",
+          },
+          { role: "user", content: prompt },
+        ],
+      });
+
+      return response.output_text?.trim() || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  async summarizeForensics(input: ForensicSummaryInput): Promise<string> {
+    const fallback = [
+      "Credit forensic narrative:",
+      `Risk score: ${input.approvalRiskScore}/100`,
+      `Tier: ${input.lenderPerception.profileTier}`,
+      "Primary suppressors:",
+      ...input.suppressionBreakdown
+        .sort((a, b) => b.estimatedPointsSuppressed - a.estimatedPointsSuppressed)
+        .slice(0, 4)
+        .map((item) => `- ${item.category}: ~${item.estimatedPointsSuppressed} points`),
+      "Fastest actions:",
+      ...input.fastestImpactActions
+        .slice(0, 4)
+        .map((item) => `- ${item.title} (${item.timelineDays}d, impact ${item.expectedImpact})`),
+      `Lender lens: ${input.lenderPerception.narrative}`,
+    ].join("\n");
+
+    if (!this.lcModel) {
+      return fallback;
+    }
+
+    try {
+      const message = await this.lcModel.invoke([
+        new SystemMessage(
+          "You are an elite underwriter + forensic analyst. Give concise, tactical, lawful guidance only."
+        ),
+        new HumanMessage(
+          `Generate a 3-section summary:
+1) Score suppression diagnosis
+2) Highest-impact action sequence
+3) Lender perception and approval readiness
+
+Goal: ${input.primaryGoal ?? "Profile optimization"}
+Risk: ${input.approvalRiskScore}
+Weaknesses: ${input.weaknessSummary.join("; ")}
+Suppressors: ${JSON.stringify(input.suppressionBreakdown)}
+Actions: ${JSON.stringify(input.fastestImpactActions)}
+Lender lens: ${JSON.stringify(input.lenderPerception)}`
+        ),
+      ]);
+
+      return message.text || fallback;
+    } catch {
+      return fallback;
+    }
   }
 }
 
 export const aiService = new AiService();
+
+export async function summarizeForensicsWithAI(input: ForensicSummaryInput): Promise<string> {
+  return aiService.summarizeForensics(input);
+}
